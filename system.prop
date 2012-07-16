@@ -32,7 +32,6 @@ ro.com.google.locationfeatures=1
 # This is a 16.16 fixed point number
 ro.opengles.version = 131072
 
-
 # Default network type
 # 0 => WCDMA Preferred.
 ro.telephony.default_network = 0
@@ -48,8 +47,6 @@ persist.service.mount.playsnd = 0
 
 # For the agps default value
 ro.ril.def.agps.mode = 2
-# For 7227 projects ,default enable AMR-Wideband (Sam@1231: WSD request to disable it by default)
-# ro.ril.enable.amr.wideband = 1
 
 # For no auto focus devices
 ro.workaround.noautofocus = 1

@@ -34,8 +34,8 @@ BOARD_VENDOR_QCOM_GPS_LOC_API_AMSS_VERSION := 50000
 
 BOARD_USE_USB_MASS_STORAGE_SWITCH := true
 
-# VER_0_6_X does not search networks
-WPA_SUPPLICANT_VERSION := VER_0_5_X
+#Note-this is a placeholder and not modified for pico yet
+WPA_SUPPLICANT_VERSION := VER_0_6_X
 BOARD_WPA_SUPPLICANT_DRIVER := WEXT
 BOARD_WLAN_DEVICE := bcm4330b2
 WIFI_DRIVER_MODULE_PATH := "/system/lib/modules/bcm4330.ko"

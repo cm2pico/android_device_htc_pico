@@ -12,12 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-#
-# This file is the build configuration for a full Android
-# build for sapphire hardware. This cleanly combines a set of
-# device-specific aspects (drivers) with a device-agnostic
-# product configuration (apps).
-#
 
 # Inherit from those products. Most specific first.
 $(call inherit-product, $(SRC_TARGET_DIR)/product/languages_full.mk)
@@ -31,7 +25,7 @@ DEVICE_PACKAGE_OVERLAYS += device/htc/pico/overlay
 PRODUCT_LOCALES += mdpi
 
 ifeq ($(TARGET_PREBUILT_KERNEL),)
-	LOCAL_KERNEL := device/htc/pico/kernel
+	LOCAL_KERNEL := device/htc/pico/prebuilt/kernel
 else
 	LOCAL_KERNEL := $(TARGET_PREBUILT_KERNEL)
 endif
@@ -65,7 +59,7 @@ PRODUCT_COPY_FILES += \
 # Board-specific init
 PRODUCT_COPY_FILES += \
     device/htc/pico/files/init.pico.rc:root/init.pico.rc \
-    device/htc/pico/files/ueventd.rc:root/ueventd.rc \
+    device/htc/pico/files/ueventd.pico.rc:root/ueventd.pico.rc \
     device/htc/pico/default.prop:root/default.prop \
 
 # Some build properties
@@ -73,8 +67,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     rild.libpath=/system/lib/libhtc_ril.so \
     ro.ril.oem.ecclist=112,911 \
     ro.vold.umsdirtyratio=20
-    ro.ril.enable.a52=0 \
-    ro.ril.enable.a53=1 \
     ro.ril.def.agps.mode=6 \
     htc.audio.alt.enable=1 \
     htc.audio.hac.enable=1 \
@@ -83,23 +75,11 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.setupwizard.enable_bypass=1 \
     dalvik.vm.lockprof.threshold=500 \
     dalvik.vm.dexopt-flags=m=y \
-    ro.product.model=HTC Explorer A310e \
-    ro.product.brand=htc_europe \
-    ro.product.name=htc_pico \
-    ro.product.device=pico \
-    ro.product.board=pico \
     ro.telephony.call_ring.multiple=false \
     keyguard.no_require_sim=true \
     ro.com.android.dateformat=dd-MM-yyyy \
     persist.telephony.support_ipv6=true \
     persist.telephony.support_ipv4=true
-    service.brcm.bt.activation = 0 \
-    service.brcm.bt.srv_active = 0 \
-    service.brcm.bt.hcid_active = 0 \
-    service.brcm.bt.btld = 0 \
-    service.brcm.bt.btld_pid = 0 \
-    service.brcm.bt.avrcp_pass_thru = 0 \
-    service.brcm.bt.avrcp_toggle = 1 \
   
 # Prebuilt libraries that are needed to build open-source libraries
 PRODUCT_COPY_FILES += \
@@ -204,7 +184,7 @@ PRODUCT_COPY_FILES += \
     vendor/htc/pico/proprietary/lib/egl/libGLESv2_adreno200.so:system/lib/egl/libGLESv2_adreno200.so \
     vendor/htc/pico/proprietary/lib/egl/libq3dtools_adreno200.so:system/lib/egl/libq3dtools_adreno200.so \
     vendor/htc/pico/proprietary/lib/libgsl.so:system/lib/libgsl.so \
-#   vendor/htc/pico/proprietary/lib/hw/eglsubAndroid.so:system/lib/hw/eglsubAndroid.so \
+    vendor/htc/pico/proprietary/lib/hw/egl.cfg:system/lib/hw/egl.cfg \
     vendor/htc/pico/proprietary/etc/firmware/yamato_pfp.fw:system/etc/firmware/yamato_pfp.fw \
     vendor/htc/pico/proprietary/etc/firmware/yamato_pm4.fw:system/etc/firmware/yamato_pm4.fw \
 
@@ -248,68 +228,16 @@ PRODUCT_COPY_FILES += \
     vendor/htc/pico/proprietary/lib/libext2fs.so:system/lib/libext2fs.so \
     vendor/htc/pico/proprietary/lib/libext2_profile.so:system/lib/libext2_profile.so \
     vendor/htc/pico/proprietary/lib/libext2_uuid.so:system/lib/libext2_uuid.so \
-    vendor/htc/pico/proprietary/etc/gps.conf:system/etc
-    vendor/htc/pico/proprietary/etc/spn-conf.xml:system/etc
+    vendor/htc/pico/proprietary/etc/gps.conf:system/etc \
+    vendor/htc/pico/proprietary/etc/spn-conf.xml:system/etc \
 
 # Audio DSP Profiles
 PRODUCT_COPY_FILES += \
-    device/htc/pico/dsp/AIC3254_REG.csv:system/etc/AIC3254_REG.csv \
-    device/htc/pico/dsp/AIC3254_REG_DualMic.csv:system/etc/AIC3254_REG_DualMic.csv \
-    device/htc/pico/dsp/AIC3254_REG_DualMicXD01.csv:system/etc/AIC3254_REG_DualMicXD01.csv \
-    device/htc/pico/dsp/AIC3254_REG_DualMicXD02.csv:system/etc/AIC3254_REG_DualMicXD02.csv \
-    device/htc/pico/dsp/AdieHWCodec.csv:system/etc/AdieHWCodec.csv \
-    device/htc/pico/dsp/AudioBTID.csv:system/etc/AudioBTID.csv \
-    device/htc/pico/dsp/CodecDSPID.txt:system/etc/CodecDSPID.txt \
-    device/htc/pico/dsp/CodecDSPID_BCLK.txt:system/etc/CodecDSPID_BCLK.txt \
-    device/htc/pico/dsp/HP_Audio.csv:system/etc/HP_Audio.csv \
-    device/htc/pico/dsp/HP_Video.csv:system/etc/HP_Video.csv \
-    device/htc/pico/dsp/SPK_Combination.csv:system/etc/SPK_Combination.csv \
-    device/htc/pico/dsp/TPA2051_CFG.csv:system/etc/TPA2051_CFG.csv \
-    device/htc/pico/dsp/soundimage/Sound_Bass_Booster.txt:system/etc/soundimage/Sound_Bass_Booster.txt \
-    device/htc/pico/dsp/soundimage/Sound_Blues.txt:system/etc/soundimage/Sound_Blues.txt \
-    device/htc/pico/dsp/soundimage/Sound_Classical.txt:system/etc/soundimage/Sound_Classical.txt \
-    device/htc/pico/dsp/soundimage/Sound_Country.txt:system/etc/soundimage/Sound_Country.txt \
-    device/htc/pico/dsp/soundimage/Sound_Dolby_A_HP.txt:system/etc/soundimage/Sound_Dolby_A_HP.txt \
-    device/htc/pico/dsp/soundimage/Sound_Dolby_A_SPK.txt:system/etc/soundimage/Sound_Dolby_A_SPK.txt \
-    device/htc/pico/dsp/soundimage/Sound_Dolby_HP.txt:system/etc/soundimage/Sound_Dolby_HP.txt \
-    device/htc/pico/dsp/soundimage/Sound_Dolby_Spk.txt:system/etc/soundimage/Sound_Dolby_Spk.txt \
-    device/htc/pico/dsp/soundimage/Sound_Dolby_V_HP.txt:system/etc/soundimage/Sound_Dolby_V_HP.txt \
-    device/htc/pico/dsp/soundimage/Sound_Dolby_V_SPK.txt:system/etc/soundimage/Sound_Dolby_V_SPK.txt \
-    device/htc/pico/dsp/soundimage/Sound_Dualmic.txt:system/etc/soundimage/Sound_Dualmic.txt \
-    device/htc/pico/dsp/soundimage/Sound_Dualmic_EP.txt:system/etc/soundimage/Sound_Dualmic_EP.txt \
-    device/htc/pico/dsp/soundimage/Sound_Dualmic_SPK.txt:system/etc/soundimage/Sound_Dualmic_SPK.txt \
-    device/htc/pico/dsp/soundimage/Sound_Jazz.txt:system/etc/soundimage/Sound_Jazz.txt \
-    device/htc/pico/dsp/soundimage/Sound_Latin.txt:system/etc/soundimage/Sound_Latin.txt \
-    device/htc/pico/dsp/soundimage/Sound_New_Age.txt:system/etc/soundimage/Sound_New_Age.txt \
-    device/htc/pico/dsp/soundimage/Sound_Original.txt:system/etc/soundimage/Sound_Original.txt \
-    device/htc/pico/dsp/soundimage/Sound_Original_BCLK.txt:system/etc/soundimage/Sound_Original_BCLK.txt \
-    device/htc/pico/dsp/soundimage/Sound_Original_Recording.txt:system/etc/soundimage/Sound_Original_Recording.txt \
-    device/htc/pico/dsp/soundimage/Sound_Original_Recording_BCLK.txt:system/etc/soundimage/Sound_Original_Recording_BCLK.txt \
-    device/htc/pico/dsp/soundimage/Sound_Original_SPK.txt:system/etc/soundimage/Sound_Original_SPK.txt \
-    device/htc/pico/dsp/soundimage/Sound_Original_SPK_BCLK.txt:system/etc/soundimage/Sound_Phone_Original_SPK_BCLK.txt \
-    device/htc/pico/dsp/soundimage/Sound_Phone_Original_HP.txt:system/etc/soundimage/Sound_Phone_Original_HP.txt \
-    device/htc/pico/dsp/soundimage/Sound_Phone_Original_HP_BCLK.txt:system/etc/soundimage/Sound_Phone_Original_HP_BCLK.txt \
-    device/htc/pico/dsp/soundimage/Sound_Phone_Original_REC.txt:system/etc/soundimage/Sound_Phone_Original_REC.txt \
-    device/htc/pico/dsp/soundimage/Sound_Phone_Original_REC_BCLK.txt:system/etc/soundimage/Sound_Phone_Original_REC_BCLK.txt \
-    device/htc/pico/dsp/soundimage/Sound_Phone_Original_SPK.txt:system/etc/soundimage/Sound_Phone_Original_SPK.txt \
-    device/htc/pico/dsp/soundimage/Sound_Phone_Original_SPK_BCLK.txt:system/etc/soundimage/Sound_Phone_Original_SPK_BCLK.txt \
-    device/htc/pico/dsp/soundimage/Sound_Piano.txt:system/etc/soundimage/Sound_Piano.txt \
-    device/htc/pico/dsp/soundimage/Sound_Pop.txt:system/etc/soundimage/Sound_Pop.txt \
-    device/htc/pico/dsp/soundimage/Sound_R_B.txt:system/etc/soundimage/Sound_R_B.txt \
-    device/htc/pico/dsp/soundimage/Sound_Recording.txt:system/etc/soundimage/Sound_Recording.txt \
-    device/htc/pico/dsp/soundimage/Sound_Recording_BCLK.txt:system/etc/soundimage/Sound_Recording_BCLK.txt \
-    device/htc/pico/dsp/soundimage/Sound_Rock.txt:system/etc/soundimage/Sound_Rock.txt \
-    device/htc/pico/dsp/soundimage/Sound_SRS_A_HP.txt:system/etc/soundimage/Sound_SRS_A_HP.txt \
-    device/htc/pico/dsp/soundimage/Sound_SRS_A_SPK.txt:system/etc/soundimage/Sound_SRS_A_SPK.txt \
-    device/htc/pico/dsp/soundimage/Sound_SRS_V_HP.txt:system/etc/soundimage/Sound_SRS_V_HP.txt \
-    device/htc/pico/dsp/soundimage/Sound_SRS_V_SPK.txt:system/etc/soundimage/Sound_SRS_V_SPK.txt \
-    device/htc/pico/dsp/soundimage/Sound_Treble_Booster.txt:system/etc/soundimage/Sound_Treble_Booster.txt \
-    device/htc/pico/dsp/soundimage/Sound_Vocal_Booster.txt:system/etc/soundimage/Sound_Vocal_Booster.txt \
-    vendor/htc/pico/proprietary/etc/soundimage/srsfx_trumedia_51.cfg:system/etc/soundimage/srsfx_trumedia_51.cfg \
-    vendor/htc/pico/proprietary/etc/soundimage/srsfx_trumedia_movie.cfg:system/etc/soundimage/srsfx_trumedia_movie.cfg \
-    vendor/htc/pico/proprietary/etc/soundimage/srsfx_trumedia_voice.cfg:system/etc/soundimage/srsfx_trumedia_voice.cfg \
-    vendor/htc/pico/proprietary/etc/soundimage/srs_geq10.cfg:system/etc/soundimage/srs_geq10.cfg \
-    vendor/htc/pico/proprietary/etc/soundimage/srsfx_trumedia_music.cfg:system/etc/soundimage/srsfx_trumedia_music.cfg \
+    device/htc/pico/prebuilt/etc/soundimage/srsfx_trumedia_51.cfg:system/etc/soundimage/srsfx_trumedia_51.cfg \
+    device/htc/pico/prebuilt/etc/soundimage/srsfx_trumedia_movie.cfg:system/etc/soundimage/srsfx_trumedia_movie.cfg \
+    device/htc/pico/prebuilt/etc/soundimage/srsfx_trumedia_voice.cfg:system/etc/soundimage/srsfx_trumedia_voice.cfg \
+    device/htc/pico/prebuilt/etc/soundimage/srs_geq10.cfg:system/etc/soundimage/srs_geq10.cfg \
+    device/htc/pico/prebuilt/etc/soundimage/srsfx_trumedia_music.cfg:system/etc/soundimage/srsfx_trumedia_music.cfg \
 
 # Bluetooth
 PRODUCT_COPY_FILES += \
@@ -317,13 +245,13 @@ PRODUCT_COPY_FILES += \
 
 # Keylayouts
 PRODUCT_COPY_FILES += \
-    device/htc/pico/keychars/qwerty2.kcm.bin:system/usr/keychars/qwerty2.kcm.bin \
-    device/htc/pico/keychars/qwerty.kcm.bin:system/usr/keychars/qwerty.kcm.bin \
-    device/htc/pico/keychars/pico-keypad.kcm.bin:system/usr/keychars/pico-keypad.kcm.bin \
-    device/htc/pico/keychars/BT_HID.kcm.bin:system/usr/keychars/BT_HID.kcm.bin \
-    device/htc/pico/keylayout/h2w_headset.kl:system/usr/keylayout/h2w_headset.kl \
-    device/htc/pico/keylayout/qwerty.kl:system/usr/keylayout/qwerty.kl \
-    device/htc/pico/keylayout/BT_HID.kl:system/usr/keylayout/BT_HID.kl \
-    device/htc/pico/keylayout/pico-keypad.kl:system/usr/keylayout/pico-keypad.kl
-    device/htc/pico/keylayout/AVRCP.kl:system/usr/keylayout/AVRCP.kl \
+    device/htc/pico/prebuilt/usr/keychars/qwerty2.kcm.bin:system/usr/keychars/qwerty2.kcm.bin \
+    device/htc/pico/prebuilt/usr/keychars/qwerty.kcm.bin:system/usr/keychars/qwerty.kcm.bin \
+    device/htc/pico/prebuilt/usr/keychars/pico-keypad.kcm.bin:system/usr/keychars/pico-keypad.kcm.bin \
+    device/htc/pico/prebuilt/usr/keychars/BT_HID.kcm.bin:system/usr/keychars/BT_HID.kcm.bin \
+    device/htc/pico/prebuilt/usr/keylayout/h2w_headset.kl:system/usr/keylayout/h2w_headset.kl \
+    device/htc/pico/prebuilt/usr/keylayout/qwerty.kl:system/usr/keylayout/qwerty.kl \
+    device/htc/pico/prebuilt/usr/keylayout/BT_HID.kl:system/usr/keylayout/BT_HID.kl \
+    device/htc/pico/prebuilt/usr/keylayout/pico-keypad.kl:system/usr/keylayout/pico-keypad.kl
+    device/htc/pico/prebuilt/usr/keylayout/AVRCP.kl:system/usr/keylayout/AVRCP.kl \
 
