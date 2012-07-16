@@ -183,7 +183,7 @@ PRODUCT_COPY_FILES += \
     vendor/htc/pico/proprietary/lib/egl/libGLESv2_adreno200.so:system/lib/egl/libGLESv2_adreno200.so \
     vendor/htc/pico/proprietary/lib/egl/libq3dtools_adreno200.so:system/lib/egl/libq3dtools_adreno200.so \
     vendor/htc/pico/proprietary/lib/libgsl.so:system/lib/libgsl.so \
-    vendor/htc/pico/proprietary/lib/hw/egl.cfg:system/lib/hw/egl.cfg \
+    vendor/htc/pico/proprietary/lib/egl/egl.cfg:system/lib/egl/egl.cfg \
     vendor/htc/pico/proprietary/etc/firmware/yamato_pfp.fw:system/etc/firmware/yamato_pfp.fw \
     vendor/htc/pico/proprietary/etc/firmware/yamato_pm4.fw:system/etc/firmware/yamato_pm4.fw \
 
