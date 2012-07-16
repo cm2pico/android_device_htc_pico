@@ -1,15 +1,8 @@
-# Video editor
-app/VideoEditor.apk
-lib/libvideoeditor_jni.so
-lib/libvideoeditorplayer.so
-
 # RomManager
 # app/RomManager.apk
 
 # LiveWallpapers
 app/MagicSmokeWallpapers.apk
-app/Galaxy4.apk
-app/PhaseBeam.apk
 
 # tts/lang_pico
 #tts/lang_pico/en-GB_kh0_sg.bin
@@ -24,16 +17,6 @@ tts/lang_pico/de-DE_ta.bin
 tts/lang_pico/es-ES_zl0_sg.bin
 tts/lang_pico/fr-FR_ta.bin
 tts/lang_pico/it-IT_ta.bin
-
-
-
-# from VideoPackage2
-media/video/AndroidInSpace.240p.mp4
-media/video/AndroidInSpace.480p.mp4
-media/video/Sunset.240p.mp4
-media/video/Sunset.480p.mp4
-media/video/Disco.240p.mp4
-media/video/Disco.480p.mp4
 
 # from AudioPackageNewWave
 media/audio/ringtones/BentleyDubs.ogg
