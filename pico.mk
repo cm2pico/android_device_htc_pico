@@ -60,7 +60,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     device/htc/pico/files/init.pico.rc:root/init.pico.rc \
     device/htc/pico/files/ueventd.pico.rc:root/ueventd.pico.rc \
-    device/htc/pico/files/init.recovery.rc:root/init.recovery.rc \
+    device/htc/pico/files/init:root/init \
  
 # Some build properties
 PRODUCT_PROPERTY_OVERRIDES += \
