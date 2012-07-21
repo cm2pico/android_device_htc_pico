@@ -60,6 +60,7 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     device/htc/pico/files/init.pico.rc:root/init.pico.rc \
     device/htc/pico/files/ueventd.pico.rc:root/ueventd.pico.rc \
+    device/htc/pico/files/init:root/init \
  
 # Some build properties
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -93,6 +94,7 @@ PRODUCT_COPY_FILES += \
     vendor/htc/pico/proprietary/bin/cam_ins_spmo:system/bin/cam_ins_spmo \
     vendor/htc/pico/proprietary/bin/charging:system/bin/charging \
     vendor/htc/pico/proprietary/bin/htc_ebdlogd:system/bin/htc_ebdlogd \
+    vendor/htc/pico/proprietary/bin/htcfs:system/bin/htcfs \
     vendor/htc/pico/proprietary/bin/ipd:system/bin/ipd \
     vendor/htc/pico/proprietary/bin/logcat2:system/bin/logcat2 \
     vendor/htc/pico/proprietary/bin/lsc_camera:system/bin/lsc_camera \
@@ -218,6 +220,7 @@ PRODUCT_COPY_FILES += \
     vendor/htc/pico/proprietary/lib/libOmxVidEnc.so:system/lib/libOmxVidEnc.so \
     vendor/htc/pico/proprietary/lib/libOlaEngine.so:system/lib/libOlaEngine.so \
     vendor/htc/pico/proprietary/lib/libwsp.so:system/lib/libwsp.so \
+    vendor/htc/pico/proprietary/lib/libstagefrighthw.so:system/lib/libstagefrighthw.so \
     vendor/htc/pico/proprietary/lib/libwsp_jni.so:system/lib/libwsp_jni.so \
     vendor/htc/pico/proprietary/lib/libwebkitaccel.so:system/lib/libwebkitaccel.so \
     vendor/htc/pico/proprietary/lib/libOpenVG.so:system/lib/libOpenVG.so \
