@@ -60,7 +60,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_COPY_FILES += \
     device/htc/pico/files/init.pico.rc:root/init.pico.rc \
     device/htc/pico/files/ueventd.pico.rc:root/ueventd.pico.rc \
-    device/htc/pico/files/init:root/init \
  
 # Some build properties
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -114,33 +113,7 @@ PRODUCT_COPY_FILES += \
 # Prebuilt Modules
 PRODUCT_COPY_FILES += \
     device/htc/pico/prebuilt/bcm4330.ko:system/lib/modules/bcm4330.ko \
-    device/htc/pico/prebuilt/dal_remotetest.ko:system/lib/modules/dal_remotetest.ko \
-    device/htc/pico/prebuilt/dma_test.ko:system/lib/modules/dma_test.ko \
-    device/htc/pico/prebuilt/gspca_main.ko:system/lib/modules/gspca_main.ko \
     device/htc/pico/prebuilt/kineto_gan.ko:system/lib/modules/kineto_gan.ko \
-    device/htc/pico/prebuilt/lcd.ko:system/lib/modules/lcd.ko \
-    device/htc/pico/prebuilt/librasdioif.ko:system/lib/modules/librasdioif.ko \
-    device/htc/pico/prebuilt/max2165.ko:system/lib/modules/max2165.ko \
-    device/htc/pico/prebuilt/mc44s803.ko:system/lib/modules/mc44s803.ko \
-    device/htc/pico/prebuilt/mmc_test.ko:system/lib/modules/mmc_test.ko \
-    device/htc/pico/prebuilt/mt20xx.ko:system/lib/modules/mt20xx.ko \
-    device/htc/pico/prebuilt/mt2060.ko:system/lib/modules/mt2060.ko \
-    device/htc/pico/prebuilt/mt2131.ko:system/lib/modules/mt2131.ko \
-    device/htc/pico/prebuilt/mt2266.ko:system/lib/modules/mt2266.ko \
-    device/htc/pico/prebuilt/mxl5005s.ko:system/lib/modules/mxl5005s.ko \
-    device/htc/pico/prebuilt/mxl5007t.ko:system/lib/modules/mxl5007t.ko \
-    device/htc/pico/prebuilt/qt1010.ko:system/lib/modules/qt1010.ko \
-    device/htc/pico/prebuilt/tda827x.ko:system/lib/modules/tda827x.ko \
-    device/htc/pico/prebuilt/tda8290.ko:system/lib/modules/tda8290.ko \
-    device/htc/pico/prebuilt/tda9887.ko:system/lib/modules/tda9887.ko \
-    device/htc/pico/prebuilt/tda18218.ko:system/lib/modules/tda18218.ko \
-    device/htc/pico/prebuilt/tda18271.ko:system/lib/modules/tda18271.ko \
-    device/htc/pico/prebuilt/tea5761.ko:system/lib/modules/tea5761.ko \
-    device/htc/pico/prebuilt/tea5767.ko:system/lib/modules/tea5767.ko \
-    device/htc/pico/prebuilt/tuner-simple.ko:system/lib/modules/tuner-simple.ko \
-    device/htc/pico/prebuilt/tuner-types.ko:system/lib/modules/tuner-types.ko \
-    device/htc/pico/prebuilt/tuner-xc2028.ko:system/lib/modules/tuner-xc2028.ko \
-    device/htc/pico/prebuilt/xc5000.ko:system/lib/modules/xc5000.ko \
 
 # Wifi
 PRODUCT_COPY_FILES += \
