@@ -34,16 +34,16 @@ BOARD_VENDOR_QCOM_GPS_LOC_API_AMSS_VERSION := 50000
 
 BOARD_USE_USB_MASS_STORAGE_SWITCH := true
 
-#Note-this is a placeholder and not modified for pico yet
-WPA_SUPPLICANT_VERSION := VER_0_6_X
+# Wifi related defines
 BOARD_WPA_SUPPLICANT_DRIVER := WEXT
-BOARD_WLAN_DEVICE := bcm4330b2
-WIFI_DRIVER_MODULE_PATH := "/system/lib/modules/bcm4330.ko"
-WIFI_DRIVER_MODULE_ARG := "firmware_path=/system/etc/wl/rtecdc.bin nvram_path=/system/etc/wl/nvram.txt"
-WIFI_DRIVER_MODULE_NAME := bcm4330b2
-WIFI_DRIVER_FW_STA_PATH := "/system/etc/wl/rtecdc.bin"
-WIFI_DRIVER_FW_AP_PATH := "/system/etc/wl/rtecdc-apsta.bin"
-WIFI_DRIVER_HAS_HTC_SOFTAP := true
+WPA_SUPPLICANT_VERSION      := VER_0_6_X
+BOARD_WLAN_DEVICE           := bcm4330
+WIFI_DRIVER_MODULE_PATH     := "/system/lib/modules/bcm4330.ko"
+WIFI_DRIVER_FW_STA_PATH     := "/system/etc/firmware/fw_bcm4330b2.bin"
+WIFI_DRIVER_FW_AP_PATH      := "/system/etc/firmware/fw_bcm4330b2_a1psta.bin"
+WIFI_DRIVER_MODULE_ARG      := "firmware_path=/system/etc/firmware/fw_bcm4330b2.bin nvram_path=/proc/calibration"
+WIFI_DRIVER_MODULE_NAME     := "bcm4330"
+WIFI_DRIVER_HAS_HTC_SOFTAP  := true
 
 BOARD_KERNEL_CMDLINE := no_console_suspend=1 console=null
 BOARD_KERNEL_BASE := 0x12c00000
