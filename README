@@ -1,2 +1,19 @@
 Device Config for Htc Explorer(Pico) for building AOSP/AOSP-based roms
-Experimental
+
+Xda Thread- http://forum.xda-developers.com/showthread.php?t=1793026
+
+Whats Working-
+ - WiFi
+ - Hardware acceleration(but cud use a lil more speed)
+ - RIL
+ - Gps(next build)
+ - Incall Audio only (libaudio still broken)
+ - Usb Mass Storage
+ - Fm Radio
+
+What Doesnt work-
+ - Camera
+ - Audio(only partially works,many fixed needed)
+ - Bluetooth
+ - Video Playback
+ - Everything else

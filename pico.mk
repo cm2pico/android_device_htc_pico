@@ -35,22 +35,15 @@ PRODUCT_COPY_FILES += \
 
 # Indcluded Packages
 PRODUCT_PACKAGES += \
-    librs_jni \
     libaudio \
     libcamera \
-    lights.pico \
     libmm-omxcore \
     libOmxCore \
     libOmxVidEnc \
     com.android.future.usb.accessory \
     LiveWallpapers \
     LiveWallpapersPicker \
-    gadget_id \
-    bash \
-    DSPManager \
     dexpreopt \
-    hwaddrs \
-    copybit.pico \
  
 # Publish that we support the live wallpaper feature.
 PRODUCT_COPY_FILES += \
