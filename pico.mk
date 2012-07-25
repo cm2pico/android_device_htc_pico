@@ -113,7 +113,8 @@ PRODUCT_COPY_FILES += \
 # Prebuilt Modules
 PRODUCT_COPY_FILES += \
     device/htc/pico/prebuilt/bcm4330.ko:system/lib/modules/bcm4330.ko \
-    device/htc/pico/prebuilt/kineto_gan.ko:system/lib/modules/kineto_gan.ko \
+    device/htc/pico/prebuilt/kineto_gan.ko:system/lib/modules/kineto_gan.ko 
+    device/htc/pico/prebuilt/cifs.ko:system/lib/modules/cifs.ko \
 
 # Wifi
 PRODUCT_COPY_FILES += \
@@ -202,10 +203,11 @@ PRODUCT_COPY_FILES += \
     vendor/htc/pico/proprietary/lib/libmm-adspsvc.so:system/lib/libmm-adspsvc.so \
     vendor/htc/pico/proprietary/lib/libOmxH264Dec.so:system/lib/libOmxH264Dec.so \
     vendor/htc/pico/proprietary/lib/libOmxMpeg4Dec.so:system/lib/libOmxMpeg4Dec.so \
-    vendor/htc/pico/proprietary/lib/libOmxVidEnc.so:system/lib/libOmxVidEnc.so \
+#   vendor/htc/pico/proprietary/lib/libOmxVidEnc.so:system/lib/libOmxVidEnc.so \
+    device/htc/pico/prebuilt/lib/libhciutils.so:system/lib/libhciutils.so \
     vendor/htc/pico/proprietary/lib/libOlaEngine.so:system/lib/libOlaEngine.so \
     vendor/htc/pico/proprietary/lib/libwsp.so:system/lib/libwsp.so \
-    #vendor/htc/pico/proprietary/lib/libstagefrighthw.so:system/lib/libstagefrighthw.so \
+#   vendor/htc/pico/proprietary/lib/libstagefrighthw.so:system/lib/libstagefrighthw.so \
     vendor/htc/pico/proprietary/lib/libwsp_jni.so:system/lib/libwsp_jni.so \
     vendor/htc/pico/proprietary/lib/libwebkitaccel.so:system/lib/libwebkitaccel.so \
     vendor/htc/pico/proprietary/lib/libOpenVG.so:system/lib/libOpenVG.so \
@@ -215,7 +217,6 @@ PRODUCT_COPY_FILES += \
     vendor/htc/pico/proprietary/lib/libext2fs.so:system/lib/libext2fs.so \
     vendor/htc/pico/proprietary/lib/libext2_profile.so:system/lib/libext2_profile.so \
     vendor/htc/pico/proprietary/lib/libext2_uuid.so:system/lib/libext2_uuid.so \
-    device/htc/pico/prebuilt/cifs.ko:system/lib/modules/cifs.ko \
     device/htc/pico/prebuilt/etc/init.d/93zram:system/etc/init.d/93zram \
     device/htc/pico/prebuilt/compcache:system/bin/compcache \
     device/htc/pico/prebuilt/handle_compcache:system/bin/handle_compcache \
