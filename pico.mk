@@ -59,7 +59,7 @@ PRODUCT_COPY_FILES += \
 # Board-specific init
 PRODUCT_COPY_FILES += \
     device/htc/pico/files/init.pico.rc:root/init.pico.rc \
-    device/htc/pico/files/ueventd.pico.rc:root/ueventd.pico.rc \
+    device/htc/pico/files/ueventd.rc:root/ueventd.rc \
  
 # Some build properties
 PRODUCT_PROPERTY_OVERRIDES += \
@@ -215,6 +215,11 @@ PRODUCT_COPY_FILES += \
     vendor/htc/pico/proprietary/lib/libext2fs.so:system/lib/libext2fs.so \
     vendor/htc/pico/proprietary/lib/libext2_profile.so:system/lib/libext2_profile.so \
     vendor/htc/pico/proprietary/lib/libext2_uuid.so:system/lib/libext2_uuid.so \
+    device/htc/pico/prebuilt/cifs.ko:system/lib/modules/cifs.ko \
+    device/htc/pico/prebuilt/etc/init.d/93zram:system/etc/init.d/93zram \
+    device/htc/pico/prebuilt/compcache:system/bin/compcache \
+    device/htc/pico/prebuilt/handle_compcache:system/bin/handle_compcache \
+    device/htc/pico/prebuilt/zram_stats:system/bin/zram_stats \
     vendor/htc/pico/proprietary/etc/gps.conf:system/etc \
     vendor/htc/pico/proprietary/etc/spn-conf.xml:system/etc \
 

@@ -1,0 +1,49 @@
+#!/system/bin/sh
+#
+# Compcache zram  manager
+# shade@chemlab.org (cyanogen)
+#Modded by Dorimanx!
+
+case "$1" in
+   start)
+if [ -e /system/lib/modules/zram.ko ]; then
+insmod /system/lib/modules/zram.ko num_devices=3
+fi
+   sync
+      echo 3 > /proc/sys/vm/drop_caches
+      echo 60 > /proc/sys/vm/swappiness
+      if [ -e /dev/block/zram0 ]; then
+	  echo $(($2*1000)) > /sys/block/zram0/disksize
+	  echo $(($2*1000)) > /sys/block/zram1/disksize
+	  echo $(($2*1000)) > /sys/block/zram2/disksize
+	  mkswap /dev/block/zram0 >/dev/null
+	  mkswap /dev/block/zram1 >/dev/null
+	  mkswap /dev/block/zram2 >/dev/null
+	  swapon /dev/block/zram0 -p 20 >/dev/null 2>&1
+	  swapon /dev/block/zram1 -p 20 >/dev/null 2>&1
+	  swapon /dev/block/zram2 -p 20 >/dev/null 2>&1
+	                      
+	  swapon /dev/block/zram0 >/dev/null 2>&1
+	  swapon /dev/block/zram1 >/dev/null 2>&1
+	  swapon /dev/block/zram2 >/dev/null 2>&1
+      fi
+   ;;
+
+   stop)
+      swapoff /dev/block/zram0 >/dev/null 2>&1
+      swapoff /dev/block/zram1 >/dev/null 2>&1
+      swapoff /dev/block/zram2 >/dev/null 2>&1
+      rmmod /system/lib/modules/zram.ko  >/dev/null 2>&1
+   ;;
+   stats)
+     if [ -e /dev/block/zram0 ]; then
+         /system/bin/zram_stats
+     fi
+   ;;
+   *)
+      echo "Usage: $0 {start <size>|stop|stats}"
+      exit 1
+esac
+
+exit 0
+

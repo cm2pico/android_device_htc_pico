@@ -9,7 +9,7 @@ on boot
     # bluetooth power up/down interface
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/type
     chown bluetooth bluetooth /sys/class/rfkill/rfkill0/state
-    chmod 0660 /sys/class/rfkill/rfkill0/state
+    chmod 0660                /sys/class/rfkill/rfkill0/state
 
     chown radio radio /sys/module/pm/parameters/idle_sleep_mode
 
@@ -32,7 +32,7 @@ on boot
 
     # flashlight
     chown system camera /sys/devices/platform/flashlight.0/leds/flashlight/brightness
-    chmod 0660 /sys/devices/platform/flashlight.0/leds/flashlight/brightness
+    chmod 0660          /sys/devices/platform/flashlight.0/leds/flashlight/brightness
 
     # enable the GPS
     setprop ro.ril.def.agps.mode 2
@@ -44,7 +44,7 @@ on boot
 
     # Power Management
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_min_freq 245000
-    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 998400
+    write /sys/devices/system/cpu/cpu0/cpufreq/scaling_max_freq 600000
     write /sys/devices/system/cpu/cpu0/cpufreq/scaling_governor ondemand
     write /sys/devices/system/cpu/cpufreq/ondemand/sampling_rate 40000
 
@@ -56,17 +56,16 @@ on boot
     setprop ro.ril.fd.scron.timeout 4
     setprop ro.ril.fd.scroff.timeout 3
 
-# compass/accelerometer daemon
-service akmd /system/bin/akmd
-    user compass
-    group compass misc input
+service btld /system/bin/logwrapper /system/bin/btld -lpm 1 -hb 3000000
+    user root
+    group bluetooth net_bt_admin
+    disabled
+    oneshot
 
 service wpa_supplicant /system/bin/wpa_supplicant \
     -Dwext -ieth0 -c/data/misc/wifi/wpa_supplicant.conf
-# we will start as root and wpa_supplicant will switch to user wifi
-# after setting up the capabilities required for WEXT
-# user wifi
-# group wifi inet keystore
+#   we will start as root and wpa_supplicant will switch to user wifi
+#   after setting up the capabilities required for WEXT
     socket wpa_eth0 dgram 660 wifi wifi
     disabled
     oneshot
@@ -92,3 +91,4 @@ service hciattach /system/bin/brcm_patchram_plus --enable_hci --enable_lpm \
     disabled
 
 service dspcrashd /system/bin/dspcrashd
+
