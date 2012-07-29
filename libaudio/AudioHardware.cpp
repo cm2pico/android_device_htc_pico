@@ -36,7 +36,8 @@
 
 #define LOG_SND_RPC 0  // Set to 1 to log sound RPC's
 
-#define COMBO_DEVICE_SUPPORTED 1 // Headset speaker combo device not supported on this target
+
+#define COMBO_DEVICE_SUPPORTED 1
 #define DUALMIC_KEY "dualmic_enabled"
 #define TTY_MODE_KEY "tty_mode"
 
@@ -68,7 +69,7 @@ static struct tx_agc tx_agc_cfg[9];
 #define PCM_OUT_DEVICE "/dev/msm_pcm_out"
 #define PCM_IN_DEVICE "/dev/msm_pcm_in"
 #define PCM_CTL_DEVICE "/dev/msm_pcm_ctl"
-#define PREPROC_CTL_DEVICE "/dev/msm_preproc_ctl"
+#define PREPROC_CTL_DEVICE "/dev/msm_audpre"
 #define VOICE_MEMO_DEVICE "/dev/msm_voicememo"
 
 static uint32_t SND_DEVICE_CURRENT=-1;
@@ -94,40 +95,78 @@ AudioHardware::AudioHardware() :
     mInit(false), mMicMute(true), mBluetoothNrec(true), mBluetoothId(0),
     mOutput(0), mSndEndpoints(NULL), mCurSndDevice(-1), mDualMicEnabled(false)
 {
-   if (get_audpp_filter() == 0) {
+   if (get_audpp_filter() == 0)
+   {
            audpp_filter_inited = true;
    }
 
     m7xsnddriverfd = open("/dev/msm_snd", O_RDWR);
-    if (m7xsnddriverfd >= 0) {
-        int rc = ioctl(m7xsnddriverfd, SND_GET_NUM_ENDPOINTS, &mNumSndEndpoints);
-        if (rc >= 0) {
-            mSndEndpoints = new msm_snd_endpoint[mNumSndEndpoints];
-            mInit = true;
-            LOGV("constructed (%d SND endpoints)", rc);
-            struct msm_snd_endpoint *ept = mSndEndpoints;
-            for (int cnt = 0; cnt < mNumSndEndpoints; cnt++, ept++) {
-                ept->id = cnt;
-                ioctl(m7xsnddriverfd, SND_GET_ENDPOINT, ept);
-                LOGV("cnt = %d ept->name = %s ept->id = %d\n", cnt, ept->name, ept->id);
-#define CHECK_FOR(desc) if (!strcmp(ept->name, #desc)) SND_DEVICE_##desc = ept->id;
-                CHECK_FOR(CURRENT);
-                CHECK_FOR(HANDSET);
-                CHECK_FOR(SPEAKER);
-                CHECK_FOR(BT);
-                CHECK_FOR(BT_EC_OFF);
-                CHECK_FOR(HEADSET);
-                CHECK_FOR(HEADSET_STEREO);
-                CHECK_FOR(HEADSET_AND_SPEAKER);
-                CHECK_FOR(IN_S_SADC_OUT_HANDSET);
-                CHECK_FOR(IN_S_SADC_OUT_SPEAKER_PHONE);
-                CHECK_FOR(TTY_HEADSET);
-                CHECK_FOR(TTY_HCO);
-                CHECK_FOR(TTY_VCO);
-#undef CHECK_FOR
-            }
-        }
-        else LOGE("Could not retrieve number of MSM SND endpoints.");
+    if (m7xsnddriverfd >= 0)
+    {
+        mInit = true;
+
+/*      /dev/msm_snd does not support   enumerating endpoints
+        here is a log of what I got with libhtc_acoustic:
+
+        I/AudioHardwareMSM72XX(  157): Endpoint Name: HANDSET
+        I/AudioHardwareMSM72XX(  157): Endpoint Id: 0
+        I/AudioHardwareMSM72XX(  157): Got one Endpoint: HANDSET
+        I/AudioHardwareMSM72XX(  157): Endpoint Name: SPEAKER
+        I/AudioHardwareMSM72XX(  157): Endpoint Id: 1
+        I/AudioHardwareMSM72XX(  157): Got one Endpoint: SPEAKER
+        I/AudioHardwareMSM72XX(  157): Endpoint Name: HEADSET
+        I/AudioHardwareMSM72XX(  157): Endpoint Id: 2
+        I/AudioHardwareMSM72XX(  157): Got one Endpoint: HEADSET
+        I/AudioHardwareMSM72XX(  157): Endpoint Name: BT
+        I/AudioHardwareMSM72XX(  157): Endpoint Id: 3
+        I/AudioHardwareMSM72XX(  157): Got one Endpoint: BT
+        I/AudioHardwareMSM72XX(  157): Endpoint Name: CARKIT
+        I/AudioHardwareMSM72XX(  157): Endpoint Id: 3
+        I/AudioHardwareMSM72XX(  157): Got one Endpoint: CARKIT
+        I/AudioHardwareMSM72XX(  157): Endpoint Name: TTY_FULL
+        I/AudioHardwareMSM72XX(  157): Endpoint Id: 5
+        I/AudioHardwareMSM72XX(  157): Got one Endpoint: TTY_FULL
+        I/AudioHardwareMSM72XX(  157): Endpoint Name: TTY_VCO
+        I/AudioHardwareMSM72XX(  157): Endpoint Id: 6
+        I/AudioHardwareMSM72XX(  157): Got one Endpoint: TTY_VCO
+        I/AudioHardwareMSM72XX(  157): Endpoint Name: TTY_HCO
+        I/AudioHardwareMSM72XX(  157): Endpoint Id: 7
+        I/AudioHardwareMSM72XX(  157): Got one Endpoint: TTY_HCO
+        I/AudioHardwareMSM72XX(  157): Endpoint Name: NO_MIC_HEADSET
+        I/AudioHardwareMSM72XX(  157): Endpoint Id: 8
+        I/AudioHardwareMSM72XX(  157): Got one Endpoint: NO_MIC_HEADSET
+        I/AudioHardwareMSM72XX(  157): Endpoint Name: FM_HEADSET
+        I/AudioHardwareMSM72XX(  157): Endpoint Id: 9
+        I/AudioHardwareMSM72XX(  157): Got one Endpoint: FM_HEADSET
+        I/AudioHardwareMSM72XX(  157): Endpoint Name: HEADSET_AND_SPEAKER
+        I/AudioHardwareMSM72XX(  157): Endpoint Id: 10
+        I/AudioHardwareMSM72XX(  157): Got one Endpoint: HEADSET_AND_SPEAKER
+        I/AudioHardwareMSM72XX(  157): Endpoint Name: FM_SPEAKER
+        I/AudioHardwareMSM72XX(  157): Endpoint Id: 11
+        I/AudioHardwareMSM72XX(  157): Got one Endpoint: FM_SPEAKER
+        I/AudioHardwareMSM72XX(  157): Endpoint Name: BT_EC_OFF
+        I/AudioHardwareMSM72XX(  157): Endpoint Id: 44
+        I/AudioHardwareMSM72XX(  157): Endpoint Name: CURRENT
+        I/AudioHardwareMSM72XX(  157): Endpoint Id: 256
+
+*/
+        SND_DEVICE_CURRENT=256;
+        SND_DEVICE_HANDSET=0;
+        SND_DEVICE_SPEAKER=1;
+        SND_DEVICE_BT=3;
+        SND_DEVICE_BT_EC_OFF=44;
+        SND_DEVICE_HEADSET=2;
+        SND_DEVICE_HEADSET_STEREO=2;                //endpoints does seems to exist fallback to headset
+        SND_DEVICE_HEADSET_AND_SPEAKER=10;
+        SND_DEVICE_IN_S_SADC_OUT_HANDSET=-1;        //does not exist
+        SND_DEVICE_IN_S_SADC_OUT_SPEAKER_PHONE=-1;  //does not exist
+        SND_DEVICE_TTY_HEADSET=-1;
+        SND_DEVICE_TTY_HCO=-1;
+        SND_DEVICE_TTY_VCO=-1;
+        SND_DEVICE_CARKIT=4;
+        SND_DEVICE_FM_SPEAKER=11;
+        SND_DEVICE_FM_HEADSET=9;
+        SND_DEVICE_NO_MIC_HEADSET=8;
 
         int AUTO_VOLUME_ENABLED = 1; // setting enabled as default
 
@@ -1217,7 +1256,7 @@ status_t AudioHardware::doRouting(AudioStreamInMSM72xx *input)
                 audProcess = (ADRC_ENABLE | EQ_ENABLE | RX_IIR_ENABLE );
             } else {
                 LOGI("Routing audio to No microphone Wired Headset (%d,%x)\n", mMode, outputDevices);
-                sndDevice = SND_DEVICE_NO_MIC_HEADSET;
+                sndDevice = SND_DEVICE_HEADSET;
             }
 #endif
         } else if (outputDevices & AudioSystem::DEVICE_OUT_WIRED_HEADSET) {
