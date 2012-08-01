@@ -56,10 +56,8 @@ PRODUCT_COPY_FILES += \
  
 # Some build properties
 PRODUCT_PROPERTY_OVERRIDES += \
-    rild.libpath=/system/lib/libhtc_ril.so \
-    ro.ril.oem.ecclist=112,911 \
     ro.vold.umsdirtyratio=20
-    ro.ril.def.agps.mode=6 \
+    ro.ril.def.agps.mode=2 \
     htc.audio.alt.enable=1 \
     htc.audio.hac.enable=1 \
     ro.com.google.networklocation=1 \
