@@ -37,7 +37,6 @@ PRODUCT_COPY_FILES += \
 PRODUCT_PACKAGES += \
     libaudio \
     libcamera \
-    libmm-omxcore \
     libOmxCore \
     libOmxVidEnc \
     com.android.future.usb.accessory \
@@ -68,7 +67,6 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.telephony.call_ring.multiple=false \
     keyguard.no_require_sim=true \
     ro.com.android.dateformat=dd-MM-yyyy \
-    persist.telephony.support_ipv6=true \
     persist.telephony.support_ipv4=true
   
 # Prebuilt libraries that are needed to build open-source libraries
@@ -96,8 +94,6 @@ PRODUCT_COPY_FILES += \
     vendor/htc/pico/proprietary/bin/snd:system/bin/snd \
     vendor/htc/pico/proprietary/bin/snd8k:system/bin/snd8k \
     vendor/htc/pico/proprietary/bin/tc:system/bin/tc \
-    vendor/htc/pico/proprietary/bin/tund:system/bin/tund \
-    vendor/htc/pico/proprietary/bin/udhcpd:system/bin/udhcpd\
     vendor/htc/pico/proprietary/bin/wireless_modem:system/xbin/wireless_modem \
     vendor/htc/pico/proprietary/bin/zchgd:system/bin/zchgd \
 
@@ -192,13 +188,13 @@ PRODUCT_COPY_FILES += \
 # OMX & MISC.
 PRODUCT_COPY_FILES += \
     vendor/htc/pico/proprietary/lib/libmm-adspsvc.so:system/lib/libmm-adspsvc.so \
+    device/htc/pico/prebuilt/lib/libmm-omxcore.so:system/lib/libmm-omxcore.so \
     vendor/htc/pico/proprietary/lib/libOmxH264Dec.so:system/lib/libOmxH264Dec.so \
     vendor/htc/pico/proprietary/lib/libOmxMpeg4Dec.so:system/lib/libOmxMpeg4Dec.so \
 #   vendor/htc/pico/proprietary/lib/libOmxVidEnc.so:system/lib/libOmxVidEnc.so \
     device/htc/pico/prebuilt/lib/libhciutils.so:system/lib/libhciutils.so \
     vendor/htc/pico/proprietary/lib/libOlaEngine.so:system/lib/libOlaEngine.so \
     vendor/htc/pico/proprietary/lib/libwsp.so:system/lib/libwsp.so \
-#   vendor/htc/pico/proprietary/lib/libstagefrighthw.so:system/lib/libstagefrighthw.so \
     vendor/htc/pico/proprietary/lib/libwsp_jni.so:system/lib/libwsp_jni.so \
     vendor/htc/pico/proprietary/lib/libwebkitaccel.so:system/lib/libwebkitaccel.so \
     vendor/htc/pico/proprietary/lib/libOpenVG.so:system/lib/libOpenVG.so \
