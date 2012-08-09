@@ -44,12 +44,12 @@
         <item>"mobile_dun,4,0,4"</item>
         <item>"mobile_hipri,5,0,3"</item>
     </string-array>
-
+    
     <!-- List of regexpressions describing the interface (if any) that represent tetherable
          USB interfaces.  If the device doesn't want to support tething over USB this should
          be empty.  An example would be "usb.*" -->
     <string-array translatable="false" name="config_tether_usb_regexs">
-        <item>"usb.*"</item>
+        <item>"usb0"</item>
     </string-array>
 
     <!-- List of regexpressions describing the interface (if any) that represent tetherable
@@ -66,6 +66,9 @@
         <item>"wlan\\d"</item>
     </string-array>
 
+     <!-- Boolean indicating if we require the use of DUN on mobile for tethering -->
+    <bool translatable="false" name="config_tether_dun_required">false</bool>
+    
     <!-- Use the new fancy screen off animation.
          Turn off to use new Gingerbread animation -->
     <bool name="config_animateScreenLights">false</bool>

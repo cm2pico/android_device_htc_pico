@@ -9,11 +9,11 @@ Whats Working-
  - Gps(next build)
  - Incall Audio only (libaudio still broken)
  - Usb Mass Storage
- - Fm Radio
+ - Audio (many need some tweaks)
+ - Bluetooth
+ - Usb tethering
 
 What Doesnt work-
  - Camera
- - Audio(only partially works,many fixed needed)
- - Bluetooth
  - Video Playback
  - Everything else

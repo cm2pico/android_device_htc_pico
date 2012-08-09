@@ -35,11 +35,11 @@ PRODUCT_COPY_FILES += \
 
 # Indcluded Packages
 PRODUCT_PACKAGES += \
-    libaudio \
-    libcamera \
+    librs_jni \
+    com.android.future.usb.accessory \
+    libmm-omxcore \
     libOmxCore \
     libOmxVidEnc \
-    com.android.future.usb.accessory \
     LiveWallpapers \
     LiveWallpapersPicker \
     dexpreopt \
@@ -55,10 +55,6 @@ PRODUCT_COPY_FILES += \
  
 # Some build properties
 PRODUCT_PROPERTY_OVERRIDES += \
-    ro.vold.umsdirtyratio=20
-    ro.ril.def.agps.mode=2 \
-    htc.audio.alt.enable=1 \
-    htc.audio.hac.enable=1 \
     ro.com.google.networklocation=1 \
     ro.com.google.gmsversion=2.2_r8 \
     ro.setupwizard.enable_bypass=1 \
@@ -67,12 +63,12 @@ PRODUCT_PROPERTY_OVERRIDES += \
     ro.telephony.call_ring.multiple=false \
     keyguard.no_require_sim=true \
     ro.com.android.dateformat=dd-MM-yyyy \
-    persist.telephony.support_ipv4=true
+    persist.telephony.support_ipv6=true \
+    persist.telephony.support_ipv4=true \
   
 # Prebuilt libraries that are needed to build open-source libraries
 PRODUCT_COPY_FILES += \
-#   vendor/htc/pico/proprietary/libcamera.so:obj/lib/libcamera.so \
-    vendor/htc/pico/proprietary/libril.so:obj/lib/libril.so \
+    vendor/htc/pico/proprietary/lib/libcamera.so:obj/lib/libcamera.so \
 
 # Prebuilt Binaries
 PRODUCT_COPY_FILES += \
@@ -94,6 +90,8 @@ PRODUCT_COPY_FILES += \
     vendor/htc/pico/proprietary/bin/snd:system/bin/snd \
     vendor/htc/pico/proprietary/bin/snd8k:system/bin/snd8k \
     vendor/htc/pico/proprietary/bin/tc:system/bin/tc \
+    vendor/htc/pico/proprietary/bin/tund:system/bin/tund \
+    vendor/htc/pico/proprietary/bin/udhcpd:system/bin/udhcpd\
     vendor/htc/pico/proprietary/bin/wireless_modem:system/xbin/wireless_modem \
     vendor/htc/pico/proprietary/bin/zchgd:system/bin/zchgd \
 
@@ -111,6 +109,7 @@ PRODUCT_COPY_FILES += \
     device/htc/pico/prebuilt/etc/firmware/fw_bcm4330_apsta.bin:system/etc/firmware/fw_bcm4330_apsta.bin \
     device/htc/pico/prebuilt/etc/firmware/fw_bcm4330b2.bin:system/etc/firmware/fw_bcm4330b2.bin \
     device/htc/pico/prebuilt/etc/firmware/fw_bcm4330b2_apsta.bin:system/etc/firmware/fw_bcm4330b2_apsta.bin \
+    vendor/htc/pico/proprietary/etc/iproute2/rt_tables:system/etc/iproute2/rt_tables \
     
 # SD Card
 PRODUCT_COPY_FILES += \
@@ -118,10 +117,15 @@ PRODUCT_COPY_FILES += \
 
 # Audio
 PRODUCT_COPY_FILES += \
-    device/htc/pico/files/etc/AudioFilter.csv:system/etc/AudioFilter.csv \
+    device/htc/pico/prebuilt/etc/AudioFilter.csv:system/etc/AudioFilter.csv \
     device/htc/pico/files/etc/media_profiles.xml:system/etc/media_profiles.xml \
+    device/htc/pico/prebuilt/etc/AudioBTID.csv:system/etc/AudioBTID.csv \
+    device/htc/pico/prebuilt/etc/AudioPara4.csv:system/etc/AudioPara4.csv \
+    device/htc/pico/prebuilt/etc/AudioPara4_WB.csv:system/etc/AudioPara4_WB.csv \
+    device/htc/pico/prebuilt/etc/AudioPreProcess.csv:system/etc/AudioPreProcess.csv \
+    vendor/htc/pico/proprietary/lib/libhtc_acoustic.so:system/lib/libhtc_acoustic.so \
     vendor/htc/pico/proprietary/lib/libaudioeq.so:system/lib/libaudioeq.so \
-
+    
 # Device permissions
 PRODUCT_COPY_FILES += \
     frameworks/base/data/etc/handheld_core_hardware.xml:system/etc/permissions/handheld_core_hardware.xml \
@@ -160,16 +164,20 @@ PRODUCT_COPY_FILES += \
 
 # Camera
 PRODUCT_COPY_FILES += \
+    vendor/htc/pico/proprietary/lib/libcamera.so:system/lib/libcamera.so \
+    vendor/htc/pico/proprietary/lib/libcameraservice.so:system/lib/libcameraservice.so \
     vendor/htc/pico/proprietary/lib/liboemcamera.so:system/lib/liboemcamera.so \
+    vendor/htc/pico/proprietary/lib/libcamera_client.so:system/lib/libcamera_client.so \
     vendor/htc/pico/proprietary/lib/libmmipl.so:system/lib/libmmipl.so \
     vendor/htc/pico/proprietary/lib/libmmjpeg.so:system/lib/libmmjpeg.so \
     vendor/htc/pico/proprietary/lib/libcameraface.so:system/lib/libcameraface.so \
     vendor/htc/pico/proprietary/lib/libcamerapp.so:system/lib/libcamerapp.so \
     vendor/htc/pico/proprietary/lib/libcapsjava.so:system/lib/libcapsjava.so \
     vendor/htc/pico/proprietary/lib/libscaladoapi.so:system/lib/libscaladoapi.so \
-    vendor/htc/pico/proprietary/lib/libscalado_htcalbum2.so:system/lib/libscalado_htcalbum2.so \
     vendor/htc/pico/proprietary/lib/libscaladoutil.so:system/lib/libscaladoutil.so \
-
+    vendor/htc/pico/proprietary/lib/libOlaEngine.so:system/lib/libOlaEngine.so \
+   
+    
 # RIL
 PRODUCT_COPY_FILES += \
     vendor/htc/pico/proprietary/lib/libril.so:system/lib/libril.so \
@@ -188,28 +196,30 @@ PRODUCT_COPY_FILES += \
 # OMX & MISC.
 PRODUCT_COPY_FILES += \
     vendor/htc/pico/proprietary/lib/libmm-adspsvc.so:system/lib/libmm-adspsvc.so \
-    device/htc/pico/prebuilt/lib/libmm-omxcore.so:system/lib/libmm-omxcore.so \
     vendor/htc/pico/proprietary/lib/libOmxH264Dec.so:system/lib/libOmxH264Dec.so \
     vendor/htc/pico/proprietary/lib/libOmxMpeg4Dec.so:system/lib/libOmxMpeg4Dec.so \
-#   vendor/htc/pico/proprietary/lib/libOmxVidEnc.so:system/lib/libOmxVidEnc.so \
-    device/htc/pico/prebuilt/lib/libhciutils.so:system/lib/libhciutils.so \
-    vendor/htc/pico/proprietary/lib/libOlaEngine.so:system/lib/libOlaEngine.so \
-    vendor/htc/pico/proprietary/lib/libwsp.so:system/lib/libwsp.so \
-    vendor/htc/pico/proprietary/lib/libwsp_jni.so:system/lib/libwsp_jni.so \
-    vendor/htc/pico/proprietary/lib/libwebkitaccel.so:system/lib/libwebkitaccel.so \
-    vendor/htc/pico/proprietary/lib/libOpenVG.so:system/lib/libOpenVG.so \
-    vendor/htc/pico/proprietary/lib/libext2_blkid.so:system/lib/libext2_blkid.so \
-    vendor/htc/pico/proprietary/lib/libext2_com_err.so:system/lib/libext2_com_err.so \
-    vendor/htc/pico/proprietary/lib/libext2_e2p.so:system/lib/libext2_e2p.so \
-    vendor/htc/pico/proprietary/lib/libext2fs.so:system/lib/libext2fs.so \
-    vendor/htc/pico/proprietary/lib/libext2_profile.so:system/lib/libext2_profile.so \
-    vendor/htc/pico/proprietary/lib/libext2_uuid.so:system/lib/libext2_uuid.so \
+    vendor/htc/pico/proprietary/lib/libOmxVidEnc.so:system/lib/libOmxVidEnc.so \
+    vendor/htc/pico/proprietary/lib/liboma-drm1-fs.so:system/lib/liboma-drm1-fs.so \
+    vendor/htc/pico/proprietary/lib/libfuse.so:system/lib/libfuse.so \
+    vendor/htc/pico/proprietary/lib/libstagefrighthw.so:system/lib/libstagefrighthw.so \
     device/htc/pico/prebuilt/etc/init.d/93zram:system/etc/init.d/93zram \
     device/htc/pico/prebuilt/compcache:system/bin/compcache \
     device/htc/pico/prebuilt/handle_compcache:system/bin/handle_compcache \
     device/htc/pico/prebuilt/zram_stats:system/bin/zram_stats \
     vendor/htc/pico/proprietary/etc/gps.conf:system/etc \
     vendor/htc/pico/proprietary/etc/spn-conf.xml:system/etc \
+    device/htc/pico/prebuilt/lib/libhciutils.so:system/lib/libhciutils.so \
+#    vendor/htc/pico/proprietary/lib/libwsp.so:system/lib/libwsp.so \
+#   
+#    vendor/htc/pico/proprietary/lib/libwsp_jni.so:system/lib/libwsp_jni.so \
+#    vendor/htc/pico/proprietary/lib/libwebkitaccel.so:system/lib/libwebkitaccel.so \
+#    vendor/htc/pico/proprietary/lib/libOpenVG.so:system/lib/libOpenVG.so \
+#    vendor/htc/pico/proprietary/lib/libext2_blkid.so:system/lib/libext2_blkid.so \
+#    vendor/htc/pico/proprietary/lib/libext2_com_err.so:system/lib/libext2_com_err.so \
+#    vendor/htc/pico/proprietary/lib/libext2_e2p.so:system/lib/libext2_e2p.so \
+#    vendor/htc/pico/proprietary/lib/libext2fs.so:system/lib/libext2fs.so \
+#    vendor/htc/pico/proprietary/lib/libext2_profile.so:system/lib/libext2_profile.so \
+#    vendor/htc/pico/proprietary/lib/libext2_uuid.so:system/lib/libext2_uuid.so \
 
 # Audio DSP Profiles
 PRODUCT_COPY_FILES += \
@@ -221,8 +231,10 @@ PRODUCT_COPY_FILES += \
 
 # Bluetooth
 PRODUCT_COPY_FILES += \
+    device/htc/pico/prebuilt/init.qcom.bt.sh:system/bin/init.qcom.bt.sh \
     vendor/htc/pico/proprietary/etc/firmware/BCM4330B1_002.001.003.0221.0228.hcd:system/etc/firmware/BCM4330B1_002.001.003.0221.0228.hcd \
 
+    
 # Keylayouts
 PRODUCT_COPY_FILES += \
     device/htc/pico/prebuilt/usr/keychars/qwerty2.kcm.bin:system/usr/keychars/qwerty2.kcm.bin \

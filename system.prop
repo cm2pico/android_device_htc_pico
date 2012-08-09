@@ -6,13 +6,28 @@ rild.libpath=/system/lib/libhtc_ril.so
 # RilLibPath for Ganlite by Godel_Chen
 rild.libpath.ganlite=/system/lib/librilswitch.so
 rilswitch.vendorlibpath=/system/lib/libhtc_ril.so
-
+ro.ril.oem.ecclist=112,911 
+ro.vold.umsdirtyratio=20
+ro.ril.def.agps.mode=6     
 ro.ril.hep = 1
 ro.ril.enable.dtm = 0
 ro.ril.hsdpa.category = 8
+ro.ril.update.acoustic.table = 1
+ro.ril.ecc.HTC-EastEurope=911
+ro.ril.ecc.HTC-WWE=999
+ro.ril.enable.a52=0
+ro.ril.enable.a53=1
+ro.ril.hsxpa=1
+ro.ril.disable.fd.plmn.prefix=23402,23410,23411,23420
+ro.ril.enable.sdr=1
+ro.com.google.clientidbase=android-htc-rev
+ro.ril.vmail.23415=1571,BT
+ro.ril.vmail.27203=171
+ro.ril.vmail.65502=181
+ro.ril.vmail.27211=171
 
 # Modify MMS APN retry timer from 5s to 2s.
-ro.gsm.2nd_data_retry_config = max_retries=3, 2000, 2000, 2000
+ro.gsm.2nd_data_retry_config = max_retries=3, 5000, 5000, 5000
 
 wifi.interface = eth0
 ro.ril.htcmaskw1.bitmask = 4294967295
@@ -97,3 +112,13 @@ ro.bt.stack.version	= 2.2.017
 #0x10000010010100100000011 represent bt profile list
 ro.bt.profiles	= 4270339
 
+
+# Properties of BTLA stack
+service.brcm.bt.activation = 0
+service.brcm.bt.srv_active = 0
+service.brcm.bt.hcid_active = 0
+service.brcm.bt.btld = 0
+service.brcm.bt.btld_pid = 0
+service.brcm.bt.avrcp_pass_thru = 0
+service.brcm.bt.avrcp_toggle = 1
+service.brcm.bt.local_name =

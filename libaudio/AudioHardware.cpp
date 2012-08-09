@@ -36,7 +36,6 @@
 
 #define LOG_SND_RPC 0  // Set to 1 to log sound RPC's
 
-
 #define COMBO_DEVICE_SUPPORTED 1
 #define DUALMIC_KEY "dualmic_enabled"
 #define TTY_MODE_KEY "tty_mode"
@@ -82,133 +81,102 @@ static uint32_t SND_DEVICE_HEADSET_STEREO=-1;
 static uint32_t SND_DEVICE_HEADSET_AND_SPEAKER=-1;
 static uint32_t SND_DEVICE_IN_S_SADC_OUT_HANDSET=-1;
 static uint32_t SND_DEVICE_IN_S_SADC_OUT_SPEAKER_PHONE=-1;
-static uint32_t SND_DEVICE_TTY_HEADSET=-1;
+static uint32_t SND_DEVICE_TTY_FULL=-1;
 static uint32_t SND_DEVICE_TTY_HCO=-1;
 static uint32_t SND_DEVICE_TTY_VCO=-1;
 static uint32_t SND_DEVICE_CARKIT=-1;
 static uint32_t SND_DEVICE_FM_SPEAKER=-1;
 static uint32_t SND_DEVICE_FM_HEADSET=-1;
 static uint32_t SND_DEVICE_NO_MIC_HEADSET=-1;
+
 // ----------------------------------------------------------------------------
 
 AudioHardware::AudioHardware() :
     mInit(false), mMicMute(true), mBluetoothNrec(true), mBluetoothId(0),
     mOutput(0), mSndEndpoints(NULL), mCurSndDevice(-1), mDualMicEnabled(false)
 {
-   if (get_audpp_filter() == 0)
-   {
-           audpp_filter_inited = true;
-   }
+    int (*snd_get_num)();
+    int (*snd_get_endpoint)(int, msm_snd_endpoint *);
+    int (*set_acoustic_parameters)();
 
+    struct msm_snd_endpoint *ept;
+
+    acoustic = ::dlopen("/system/lib/libhtc_acoustic.so", RTLD_NOW);
+    if (acoustic == NULL ) {
+        LOGE("Could not open libhtc_acoustic.so");
+        /* this is not really an error on non-htc devices... */
+        mNumSndEndpoints = 0;
+        mInit = true;
+        return;
+    }
+
+    set_acoustic_parameters = (int (*)(void))::dlsym(acoustic, "set_acoustic_parameters");
+    if ((*set_acoustic_parameters) == 0 ) {
+        LOGE("Could not open set_acoustic_parameters()");
+        return;
+    }
+
+    int rc = set_acoustic_parameters();
+    if (rc < 0) {
+        LOGE("Could not set acoustic parameters to share memory: %d", rc);
+//        return;
+    }
+
+    snd_get_num = (int (*)(void))::dlsym(acoustic, "snd_get_num_endpoints");
+    if ((*snd_get_num) == 0 ) {
+        LOGE("Could not open snd_get_num()");
+//        return;
+    }
+
+    mNumSndEndpoints = snd_get_num();
+    LOGD("mNumSndEndpoints = %d", mNumSndEndpoints);
+    mSndEndpoints = new msm_snd_endpoint[mNumSndEndpoints];
+    mInit = true;
+    LOGV("constructed %d SND endpoints)", mNumSndEndpoints);
+    ept = mSndEndpoints;
+    snd_get_endpoint = (int (*)(int, msm_snd_endpoint *))::dlsym(acoustic, "snd_get_endpoint");
+    if ((*snd_get_endpoint) == 0 ) {
+        LOGE("Could not open snd_get_endpoint()");
+        return;
+    }
+
+    for (int cnt = 0; cnt < mNumSndEndpoints; cnt++, ept++) {
+        ept->id = cnt;
+        snd_get_endpoint(cnt, ept);
+#define CHECK_FOR(desc) \
+        if (!strcmp(ept->name, #desc)) { \
+            SND_DEVICE_##desc = ept->id; \
+            LOGD("BT MATCH " #desc); \
+        } else
+        CHECK_FOR(CURRENT)
+        CHECK_FOR(HANDSET)
+        CHECK_FOR(SPEAKER)
+        CHECK_FOR(BT)
+        CHECK_FOR(BT_EC_OFF)
+        CHECK_FOR(HEADSET)
+        CHECK_FOR(CARKIT)
+        CHECK_FOR(TTY_FULL)
+        CHECK_FOR(TTY_VCO)
+        CHECK_FOR(TTY_HCO)
+        CHECK_FOR(NO_MIC_HEADSET)
+        CHECK_FOR(FM_HEADSET)
+        CHECK_FOR(FM_SPEAKER)
+        CHECK_FOR(HEADSET_AND_SPEAKER) {}
+#undef CHECK_FOR
+    }
+    ::dlclose(acoustic);
+    acoustic = 0;
+    
+    SND_DEVICE_HEADSET_STEREO = SND_DEVICE_HEADSET;
+    
     m7xsnddriverfd = open("/dev/msm_snd", O_RDWR);
     if (m7xsnddriverfd >= 0)
     {
-        mInit = true;
-
-/*      /dev/msm_snd does not support   enumerating endpoints
-        here is a log of what I got with libhtc_acoustic:
-
-        I/AudioHardwareMSM72XX(  157): Endpoint Name: HANDSET
-        I/AudioHardwareMSM72XX(  157): Endpoint Id: 0
-        I/AudioHardwareMSM72XX(  157): Got one Endpoint: HANDSET
-        I/AudioHardwareMSM72XX(  157): Endpoint Name: SPEAKER
-        I/AudioHardwareMSM72XX(  157): Endpoint Id: 1
-        I/AudioHardwareMSM72XX(  157): Got one Endpoint: SPEAKER
-        I/AudioHardwareMSM72XX(  157): Endpoint Name: HEADSET
-        I/AudioHardwareMSM72XX(  157): Endpoint Id: 2
-        I/AudioHardwareMSM72XX(  157): Got one Endpoint: HEADSET
-        I/AudioHardwareMSM72XX(  157): Endpoint Name: BT
-        I/AudioHardwareMSM72XX(  157): Endpoint Id: 3
-        I/AudioHardwareMSM72XX(  157): Got one Endpoint: BT
-        I/AudioHardwareMSM72XX(  157): Endpoint Name: CARKIT
-        I/AudioHardwareMSM72XX(  157): Endpoint Id: 3
-        I/AudioHardwareMSM72XX(  157): Got one Endpoint: CARKIT
-        I/AudioHardwareMSM72XX(  157): Endpoint Name: TTY_FULL
-        I/AudioHardwareMSM72XX(  157): Endpoint Id: 5
-        I/AudioHardwareMSM72XX(  157): Got one Endpoint: TTY_FULL
-        I/AudioHardwareMSM72XX(  157): Endpoint Name: TTY_VCO
-        I/AudioHardwareMSM72XX(  157): Endpoint Id: 6
-        I/AudioHardwareMSM72XX(  157): Got one Endpoint: TTY_VCO
-        I/AudioHardwareMSM72XX(  157): Endpoint Name: TTY_HCO
-        I/AudioHardwareMSM72XX(  157): Endpoint Id: 7
-        I/AudioHardwareMSM72XX(  157): Got one Endpoint: TTY_HCO
-        I/AudioHardwareMSM72XX(  157): Endpoint Name: NO_MIC_HEADSET
-        I/AudioHardwareMSM72XX(  157): Endpoint Id: 8
-        I/AudioHardwareMSM72XX(  157): Got one Endpoint: NO_MIC_HEADSET
-        I/AudioHardwareMSM72XX(  157): Endpoint Name: FM_HEADSET
-        I/AudioHardwareMSM72XX(  157): Endpoint Id: 9
-        I/AudioHardwareMSM72XX(  157): Got one Endpoint: FM_HEADSET
-        I/AudioHardwareMSM72XX(  157): Endpoint Name: HEADSET_AND_SPEAKER
-        I/AudioHardwareMSM72XX(  157): Endpoint Id: 10
-        I/AudioHardwareMSM72XX(  157): Got one Endpoint: HEADSET_AND_SPEAKER
-        I/AudioHardwareMSM72XX(  157): Endpoint Name: FM_SPEAKER
-        I/AudioHardwareMSM72XX(  157): Endpoint Id: 11
-        I/AudioHardwareMSM72XX(  157): Got one Endpoint: FM_SPEAKER
-        I/AudioHardwareMSM72XX(  157): Endpoint Name: BT_EC_OFF
-        I/AudioHardwareMSM72XX(  157): Endpoint Id: 44
-        I/AudioHardwareMSM72XX(  157): Endpoint Name: CURRENT
-        I/AudioHardwareMSM72XX(  157): Endpoint Id: 256
-
-*/
-        SND_DEVICE_CURRENT=256;
-        SND_DEVICE_HANDSET=0;
-        SND_DEVICE_SPEAKER=1;
-        SND_DEVICE_BT=3;
-        SND_DEVICE_BT_EC_OFF=44;
-        SND_DEVICE_HEADSET=2;
-        SND_DEVICE_HEADSET_STEREO=2;                //endpoints does seems to exist fallback to headset
-        SND_DEVICE_HEADSET_AND_SPEAKER=10;
-        SND_DEVICE_IN_S_SADC_OUT_HANDSET=-1;        //does not exist
-        SND_DEVICE_IN_S_SADC_OUT_SPEAKER_PHONE=-1;  //does not exist
-        SND_DEVICE_TTY_HEADSET=-1;
-        SND_DEVICE_TTY_HCO=-1;
-        SND_DEVICE_TTY_VCO=-1;
-        SND_DEVICE_CARKIT=4;
-        SND_DEVICE_FM_SPEAKER=11;
-        SND_DEVICE_FM_HEADSET=9;
-        SND_DEVICE_NO_MIC_HEADSET=8;
-
-        int AUTO_VOLUME_ENABLED = 1; // setting enabled as default
-
-        static const char *const path = "/system/etc/AutoVolumeControl.txt";
-        int txtfd;
-        struct stat st;
-        char *read_buf;
-
-        txtfd = open(path, O_RDONLY);
-        if (txtfd < 0) {
-            LOGE("failed to open AUTO_VOLUME_CONTROL %s: %s (%d)",
-                  path, strerror(errno), errno);
-        }
-        else {
-            if (fstat(txtfd, &st) < 0) {
-                LOGE("failed to stat %s: %s (%d)",
-                      path, strerror(errno), errno);
-                close(txtfd);
-            }
-
-            read_buf = (char *) mmap(0, st.st_size,
-                        PROT_READ | PROT_WRITE,
-                        MAP_PRIVATE,
-                        txtfd, 0);
-
-            if (read_buf == MAP_FAILED) {
-                LOGE("failed to mmap parameters file: %s (%d)",
-                      strerror(errno), errno);
-                close(txtfd);
-            }
-
-            if(read_buf[0] =='0')
-               AUTO_VOLUME_ENABLED = 0;
-
-            munmap(read_buf, st.st_size);
-            close(txtfd);
-        }
-
-        ioctl(m7xsnddriverfd, SND_AVC_CTL, &AUTO_VOLUME_ENABLED);
+	int AUTO_VOLUME_ENABLED = 1;
+	ioctl(m7xsnddriverfd, SND_AVC_CTL, &AUTO_VOLUME_ENABLED);
         ioctl(m7xsnddriverfd, SND_AGC_CTL, &AUTO_VOLUME_ENABLED);
     }
-	else LOGE("Could not open MSM SND driver.");
+    else LOGE("Could not open MSM SND driver.");
 }
 
 AudioHardware::~AudioHardware()
@@ -1085,7 +1053,7 @@ status_t AudioHardware::setVoiceVolume(float v)
     LOGD("setVoiceVolume(%f)\n", v);
     LOGI("Setting in-call volume to %d (available range is 0 to 7)\n", vol);
 
-    if ((mCurSndDevice != -1) && ((mCurSndDevice == SND_DEVICE_TTY_HEADSET) || (mCurSndDevice == SND_DEVICE_TTY_VCO)))
+    if ((mCurSndDevice != -1) && ((mCurSndDevice == SND_DEVICE_TTY_FULL) || (mCurSndDevice == SND_DEVICE_TTY_VCO)))
     {
         vol = 1;
         LOGI("For TTY device in FULL or VCO mode, the volume level is set to: %d \n", vol);
@@ -1187,6 +1155,8 @@ status_t AudioHardware::doRouting(AudioStreamInMSM72xx *input)
     int audProcess = (ADRC_DISABLE | EQ_DISABLE | RX_IIR_DISABLE | MBADRC_DISABLE);
     int sndDevice = -1;
 
+    LOGI("do output routing device %x\n", outputDevices);
+
     if (input != NULL) {
         uint32_t inputDevice = input->devices();
         LOGI("do input routing device %x\n", inputDevice);
@@ -1228,7 +1198,7 @@ status_t AudioHardware::doRouting(AudioStreamInMSM72xx *input)
                 (outputDevices & AudioSystem::DEVICE_OUT_WIRED_HEADSET)) {
             if (mTtyMode == TTY_FULL) {
                 LOGI("Routing audio to TTY FULL Mode\n");
-                sndDevice = SND_DEVICE_TTY_HEADSET;
+                sndDevice = SND_DEVICE_TTY_FULL;
             } else if (mTtyMode == TTY_VCO) {
                 LOGI("Routing audio to TTY VCO Mode\n");
                 sndDevice = SND_DEVICE_TTY_VCO;
