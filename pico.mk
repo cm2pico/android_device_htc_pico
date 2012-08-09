@@ -210,7 +210,6 @@ PRODUCT_COPY_FILES += \
     vendor/htc/pico/proprietary/etc/spn-conf.xml:system/etc \
     device/htc/pico/prebuilt/lib/libhciutils.so:system/lib/libhciutils.so \
 #    vendor/htc/pico/proprietary/lib/libwsp.so:system/lib/libwsp.so \
-#   
 #    vendor/htc/pico/proprietary/lib/libwsp_jni.so:system/lib/libwsp_jni.so \
 #    vendor/htc/pico/proprietary/lib/libwebkitaccel.so:system/lib/libwebkitaccel.so \
 #    vendor/htc/pico/proprietary/lib/libOpenVG.so:system/lib/libOpenVG.so \
